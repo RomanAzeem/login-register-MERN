@@ -5,23 +5,21 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please provide name'],
-    unique: true,
+    required: true,
   },
   email: {
     type: String,
-    required: [true, 'Please add an email'],
+    required: true,
     unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email',
-    ],
   },
   password: {
     type: String,
-    required: [true, 'Pleaes provide password'],
+    required: true,
   },
-  createdAt: {
+  avatar: {
+    type: String,
+  },
+  date: {
     type: Date,
     default: Date.now,
   },
@@ -35,7 +33,6 @@ UserSchema.pre('save', async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  console.log('this.password', this.password);
 });
 
 // Match user entered password to hashed password in database

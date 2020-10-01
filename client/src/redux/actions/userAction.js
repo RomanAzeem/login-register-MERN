@@ -1,4 +1,5 @@
-import axios from 'axios';
+import api from '../../utils/api';
+import { setAlert } from './alert.js';
 
 import {
   LOGIN_SUCCESS,
@@ -8,35 +9,50 @@ import {
   REGISTER_FAIL,
 } from './types';
 
-//Register User
-export const register = (userData) => (dispatch, state) => {
-  const { userName, email, password } = userData;
-  axios
-    .post(`/api/users/register`, { userName, email, password })
-    .then((res) => {
-      dispatch({
-        type: REGISTER_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      //dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({ type: REGISTER_FAIL });
+// Register User
+export const register = ({ name, email, password }) => async (dispatch) => {
+  const body = { name, email, password };
+  try {
+    const res = await api.post('/users/register', body);
+    dispatch({
+      type: REGISTER_SUCCESS,
+      payload: res.data,
     });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    console.log(errors);
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: REGISTER_FAIL,
+    });
+  }
 };
 
-//LoginIn User
-export const login = (userData) => (dispatch, getState) => {
-  const { email, password } = userData;
-  axios
-    .post('/api/users/login', { email, password })
-    .then((res) => {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch({ type: LOGIN_FAILED });
+// Login User
+export const login = (email, password) => async (dispatch) => {
+  const body = { email, password };
+
+  try {
+    const res = await api.post('/users/login', body);
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
     });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    console.log(errors[0].msg);
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: LOGIN_FAILED,
+    });
+  }
 };
+
+// Logout
+export const logout = () => ({ type: LOGOUT_SUCCESS });

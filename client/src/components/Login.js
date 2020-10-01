@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../redux/actions/userAction';
 
-const Login = ({ user, login }) => {
+const Login = ({ isAuthenticated, login }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,9 +17,12 @@ const Login = ({ user, login }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log(email, password);
     login(email, password);
   };
-
+  if (isAuthenticated) {
+    return <Redirect to='/' />;
+  }
   return (
     <form onSubmit={onSubmit}>
       <h3>Login In</h3>
@@ -51,14 +54,14 @@ const Login = ({ user, login }) => {
 
       <div className='form-group'>
         <div className='custom-control custom-checkbox'>
-          <input
+          {/* <input
             type='checkbox'
             className='custom-control-input'
             id='customCheck1'
           />
           <label className='custom-control-label' htmlFor='customCheck1'>
             Remember me
-          </label>
+          </label> */}
         </div>
       </div>
 
@@ -72,10 +75,10 @@ const Login = ({ user, login }) => {
 };
 
 Login.propTypes = {
-  user: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
 const mapStateToProps = (state) => ({
-  user: state.user,
+  isAuthenticated: state.user.isAuthenticated,
 });
 export default connect(mapStateToProps, { login })(Login);
