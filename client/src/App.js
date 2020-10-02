@@ -3,11 +3,12 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import Register from './components/Register';
-import Login from './components/Login';
-import NotFound from './components/NotFound';
-import Home from './components/Home';
-import Navbar from './components/Navbar';
+import Navbar from './components/layout/Navbar';
+import Alert from './components/layout/Alert';
+import Home from './components/pages/Home';
+import Login from './components/users/Login';
+import Register from './components/users/Register';
+import NotFound from './components/common/NotFound';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Navbar />
           <div className='auth-wrapper'>
             <div className='auth-inner'>
+              <Alert />
               <Switch>
                 <Route exact path='/register' component={Register}></Route>
                 <Route exact path='/login' component={Login}></Route>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../redux/actions/userAction';
+import { login } from '../../redux/actions/user';
 
 const Login = ({ isAuthenticated, login }) => {
   const [formData, setFormData] = useState({
@@ -17,7 +17,6 @@ const Login = ({ isAuthenticated, login }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
     login(email, password);
   };
   if (isAuthenticated) {
@@ -47,6 +46,7 @@ const Login = ({ isAuthenticated, login }) => {
           placeholder='Password'
           name='password'
           value={password}
+          required
           onChange={onChange}
           minLength='6'
         />
