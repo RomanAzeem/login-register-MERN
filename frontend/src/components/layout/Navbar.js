@@ -1,9 +1,32 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import LocalizedStrings from 'react-localization';
+
+let strings = new LocalizedStrings({
+  en: {
+    login: 'Login',
+    register: 'Register',
+  },
+  it: {
+    login: 'Accesso',
+    register: 'Registrati',
+  },
+});
 
 const Navbar = ({ user }) => {
+  const [language, setLanguage] = useState('en');
+  const handleLanguageChange = (e) => {
+    e.preventDefault();
+    let lang = e.target.value;
+    setLanguage(lang);
+  };
+
+  useEffect(() => {
+    strings.setLanguage(language);
+  }, [language]);
+
   return (
     <Fragment>
       <nav className='navbar navbar-expand-lg navbar-light fixed-top'>
@@ -13,16 +36,24 @@ const Navbar = ({ user }) => {
             <ul className='navbar-nav ml-auto'>
               <li className='nav-item'>
                 <Link className='nav-link' to={'/login'}>
-                  Login
+                  {strings.login}
                 </Link>
               </li>
               <li className='nav-item'>
                 <Link className='nav-link' to={'/register'}>
-                  Sign up
+                  {strings.register}
                 </Link>
               </li>
             </ul>
           </div>
+        </div>
+        <div>
+          Change Language:{' '}
+          <select onChange={handleLanguageChange}>
+            <option value='it'>It- Italian</option>
+            <option value='en'>En- English</option>
+          </select>
+          <br />
         </div>
       </nav>
     </Fragment>
